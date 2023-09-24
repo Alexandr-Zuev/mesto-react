@@ -1,26 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import updateAva from '../images/updateava.svg';
+import api from '../utils/Аpi';
 
-function Main() {
-  const handleEditProfileClick = () => {
-    const profilePopup = document.querySelector('.popup');
-    profilePopup.classList.add('popup_is-opened');
-  };
+function Main({ handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick }) {
+  const [userName, setUserName] = useState('');
+  const [userDescription, setUserDescription] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
+
+  useEffect(() => {
+    const handleRequest = function () {
+      api
+        .getUserInfo()
+        .then(userData => {
+          setUserName(userData.name);
+          setUserDescription(userData.about);
+          setUserAvatar(userData.avatar);
+        })
+        .catch(error => {
+          console.error('Ошибка при получении данных о пользователе:', error);
+        });
+    };
+
+    handleRequest();
+  }, []);
 
   return (
     <div className="profile">
       <div className="profile__avatar-group">
+        <img src={userAvatar} alt="аватар" className="profile__avatar" />
         <img
-          src="https://avatars.mds.yandex.net/i?id=ff93ba9764f06d9f1818936f895d040590f016c9-10696775-images-thumbs&n=13"
-          alt="аватар"
-          className="profile__avatar"
+          src={updateAva}
+          alt="Редактирование аватара"
+          className="profile__avatar-icon-up"
+          onClick={handleEditAvatarClick}
         />
-        <img src={updateAva} alt="Редактирование аватара" className="profile__avatar-icon-up" />
       </div>
 
       <div className="profile__info">
         <div className="profile__info-title">
-          <h1 className="profile__title">Жак-Ив Кусто</h1>
+          <h1 className="profile__title">{userName}</h1>
           <button
             id="open-popup-profile-button"
             className="open-button"
@@ -28,9 +46,14 @@ function Main() {
             onClick={handleEditProfileClick}
           ></button>
         </div>
-        <p className="profile__subtitle">Исследователь океана</p>
+        <p className="profile__subtitle">{userDescription}</p>
       </div>
-      <button id="add-button" className="add-button" type="button"></button>
+      <button
+        id="add-button"
+        className="add-button"
+        type="button"
+        onClick={handleAddPlaceClick}
+      ></button>
     </div>
   );
 }
