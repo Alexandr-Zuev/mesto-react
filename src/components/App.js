@@ -5,7 +5,7 @@ import Card from './Card';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import api from '../utils/Аpi';
+import api from '../utils/Аpi.js';
 
 function App() {
   const [popupData, setPopupData] = useState({
