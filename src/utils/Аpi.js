@@ -1,4 +1,4 @@
-export class Api {
+class Api extends React.Component {
   constructor(options) {
     this.baseUrl = options.baseUrl;
     this.headers = options.headers;
