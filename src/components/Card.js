@@ -1,43 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import api from '../utils/Аpi';
+import React from 'react';
 
-export default function Card(props) {
-  const mapCards = (cards) => {
-    return cards.map((item) => ({
-      id: item._id,
-      src: item.link,
-      alt: item.name,
-      title: item.owner.name,
-      subtitle: item.owner.about,
-    }));
-  };
-
-  const [cards, setCards] = useState([]);
- 
-
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((res) => {
-        setCards(mapCards(res));
-        
-      })
-      .catch((error) => {
-        console.error('Ошибка при загрузке данных:', error);
-        
-      });
-  }, []);
-
-  const handleClick = (card) => {
-    props.onCardClick(card);
+export default function Card({ cards, onCardClick }) {
+  const handleClick = card => {
+    onCardClick(card);
   };
 
   return (
     <section className="elements">
-      
-      {cards.map((card) => (
+      {cards.map(card => (
         <article key={card.id} className="element" id={card.id}>
-          <img src={card.src} alt={card.alt} className="element__img" onClick={() => handleClick(card)} />
+          <img
+            src={card.src}
+            alt={card.alt}
+            className="element__img"
+            onClick={() => handleClick(card)}
+          />
           <button className="delete-button" type="button"></button>
           <div className="element__group">
             <h2 className="element__text">{card.title}</h2>
