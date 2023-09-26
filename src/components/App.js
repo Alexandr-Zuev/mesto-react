@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import api from '../utils/Аpi';
 import Header from './Header';
 import Main from './Main';
 import Card from './Card';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
-import api from '../utils/Аpi.js';
 
 function App() {
   const [popupData, setPopupData] = useState({
