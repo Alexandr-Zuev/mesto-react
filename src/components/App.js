@@ -4,6 +4,7 @@ import Main from './Main';
 import Card from './Card';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
 
 function App() {
   const [popupData, setPopupData] = useState({
@@ -26,8 +27,7 @@ function App() {
             className="popup__input"
             name="name-input-title"
             required
-            minLength="2"
-            maxLength="40"
+           
           />
           <span id="name-input-title-error" className="popup__error"></span>
           <input
@@ -36,8 +36,7 @@ function App() {
             className="popup__input"
             name="name-input-subtitle"
             required
-            minLength="2"
-            maxLength="200"
+          
           />
           <span id="name-input-subtitle-error" className="popup__error"></span>
           <button type="submit" className="popup__button">
@@ -58,24 +57,23 @@ function App() {
           <input
             id="name-input-card"
             type="text"
-            class="popup__input"
+            className="popup__input"
             name="name-input-card"
             placeholder="Название"
             required
-            minlength="2"
-            maxlength="30"
+           
           />
-          <span id="name-input-card-error" class="popup__error"></span>
+          <span id="name-input-card-error" className="popup__error"></span>
           <input
             id="name-input-link"
             type="url"
-            class="popup__input"
+            className="popup__input"
             name="name-input-link"
             placeholder="Ссылка на картинку"
             required
           />
-          <span id="name-input-link-error" class="popup__error"></span>
-          <button id="popup-card-button" type="submit" class="popup__button">
+          <span id="name-input-link-error" className="popup__error"></span>
+          <button id="popup-card-button" type="submit" className="popup__button">
             Создать
           </button>
         </>
@@ -93,18 +91,25 @@ function App() {
           <input
             id="new-avatar-link"
             type="url"
-            class="popup__input"
+            className="popup__input"
             name="new-avatar-link"
             placeholder="Ссылка на аватар"
             required
           />
-          <span id="new-avatar-link-error" class="popup__error"></span>
-          <button id="popup-update-avatar-button" type="submit" class="popup__button">
+          <span id="new-avatar-link-error" className="popup__error"></span>
+          <button id="popup-update-avatar-button" type="submit" className="popup__button">
             Сохранить
           </button>
         </>
       )
     });
+  };
+
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [isImagePopupOpen, setImagePopupOpen] = useState(false);
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    setImagePopupOpen(true);
   };
 
   const closeAllPopups = () => {
@@ -114,6 +119,7 @@ function App() {
       name: '',
       children: ''
     });
+    setSelectedCard(null);
   };
 
   return (
@@ -125,13 +131,18 @@ function App() {
           handleAddPlaceClick={onAddPlace}
           handleEditAvatarClick={onEditAvatar}
         />
-        <Card />
+       <Card onCardClick={handleCardClick} />
         <PopupWithForm
           title={popupData.title}
           name={popupData.name}
           isOpen={popupData.isOpen}
           onClose={closeAllPopups}
           children={popupData.children}
+        />
+        <ImagePopup
+        card = {selectedCard}
+        onClose ={closeAllPopups}
+        isOpen={isImagePopupOpen}
         />
       </main>
       <Footer />
