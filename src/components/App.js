@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Api, api } from '../utils/Аpi.js';
+import { api } from '../utils/api.js';
 import Header from './Header';
 import Main from './Main';
 import Card from './Card';

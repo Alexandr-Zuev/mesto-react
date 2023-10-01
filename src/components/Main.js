@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import updateAva from '../images/updateava.svg';
-import { Api, api } from '../utils/Аpi.js';
+import { api } from '../utils/api.js';
 
 function Main({ handleEditAvatarClick, handleEditProfileClick, handleAddPlaceClick }) {
   const [userName, setUserName] = useState('');
