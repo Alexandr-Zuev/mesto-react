@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utils/Аpi';
+import { api } from '../utils/api.js';
 import Header from './Header';
 import Main from './Main';
 import Card from './Card';
@@ -12,7 +12,8 @@ function App() {
     isOpen: false,
     title: '',
     name: '',
-    children: ''
+    nameSubBtn: '',
+    children: '' 
   });
 
   const onEditProfile = () => {
@@ -20,6 +21,7 @@ function App() {
       isOpen: true,
       title: 'Редактировать профиль',
       name: 'edit-form',
+      nameSubBtn: 'Сохранить',
       children: (
         <>
           <input
@@ -38,9 +40,7 @@ function App() {
             required
           />
           <span id="name-input-subtitle-error" className="popup__error"></span>
-          <button type="submit" className="popup__button">
-            Сохранить
-          </button>
+
         </>
       )
     });
@@ -51,6 +51,7 @@ function App() {
       isOpen: true,
       title: 'Новое место',
       name: 'add-form',
+      nameSubBtn: 'Создать',
       children: (
         <>
           <input
@@ -71,9 +72,7 @@ function App() {
             required
           />
           <span id="name-input-link-error" className="popup__error"></span>
-          <button id="popup-card-button" type="submit" className="popup__button">
-            Создать
-          </button>
+
         </>
       )
     });
@@ -84,6 +83,7 @@ function App() {
       isOpen: true,
       title: 'Обновить аватар',
       name: 'new-avatar-form',
+      nameSubBtn: 'Сохранить',
       children: (
         <>
           <input
@@ -95,9 +95,7 @@ function App() {
             required
           />
           <span id="new-avatar-link-error" className="popup__error"></span>
-          <button id="popup-update-avatar-button" type="submit" className="popup__button">
-            Сохранить
-          </button>
+
         </>
       )
     });
@@ -152,13 +150,18 @@ function App() {
           handleAddPlaceClick={onAddPlace}
           handleEditAvatarClick={onEditAvatar}
         />
-        <Card cards={cards} onCardClick={handleCardClick} />
+        <section className="elements">
+          {cards.map(card => (
+            <Card card={card} onCardClick={handleCardClick} key={card.id} />
+          ))}
+        </section >
         <PopupWithForm
           title={popupData.title}
           name={popupData.name}
           isOpen={popupData.isOpen}
           onClose={closeAllPopups}
           children={popupData.children}
+          nameSubBtn={popupData.nameSubBtn}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
       </main>

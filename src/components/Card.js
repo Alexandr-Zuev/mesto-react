@@ -1,14 +1,13 @@
 import React from 'react';
 
-export default function Card({ cards, onCardClick }) {
+export default function Card({ card, onCardClick }) {
   const handleClick = card => {
     onCardClick(card);
   };
 
   return (
-    <section className="elements">
-      {cards.map(card => (
-        <article key={card.id} className="element" id={card.id}>
+    
+        <article className="element" id={card.id}>
           <img
             src={card.src}
             alt={card.alt}
@@ -24,7 +23,6 @@ export default function Card({ cards, onCardClick }) {
             </div>
           </div>
         </article>
-      ))}
-    </section>
+ 
   );
 }
