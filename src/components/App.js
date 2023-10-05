@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api.js';
 import Header from './Header';
 import Main from './Main';
-import Card from './Card';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
@@ -13,7 +12,7 @@ function App() {
     title: '',
     name: '',
     nameSubBtn: '',
-    children: '' 
+    children: ''
   });
 
   const onEditProfile = () => {
@@ -40,7 +39,6 @@ function App() {
             required
           />
           <span id="name-input-subtitle-error" className="popup__error"></span>
-
         </>
       )
     });
@@ -72,7 +70,6 @@ function App() {
             required
           />
           <span id="name-input-link-error" className="popup__error"></span>
-
         </>
       )
     });
@@ -95,7 +92,6 @@ function App() {
             required
           />
           <span id="new-avatar-link-error" className="popup__error"></span>
-
         </>
       )
     });
@@ -144,27 +140,25 @@ function App() {
   return (
     <div className="page">
       <Header />
-      <main className="content">
-        <Main
-          handleEditProfileClick={onEditProfile}
-          handleAddPlaceClick={onAddPlace}
-          handleEditAvatarClick={onEditAvatar}
-        />
-        <section className="elements">
-          {cards.map(card => (
-            <Card card={card} onCardClick={handleCardClick} key={card.id} />
-          ))}
-        </section >
-        <PopupWithForm
-          title={popupData.title}
-          name={popupData.name}
-          isOpen={popupData.isOpen}
-          onClose={closeAllPopups}
-          children={popupData.children}
-          nameSubBtn={popupData.nameSubBtn}
-        />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
-      </main>
+
+      <Main
+        handleEditProfileClick={onEditProfile}
+        handleAddPlaceClick={onAddPlace}
+        handleEditAvatarClick={onEditAvatar}
+        cards={cards}
+        handleCardClick={handleCardClick}
+      />
+
+      <PopupWithForm
+        title={popupData.title}
+        name={popupData.name}
+        isOpen={popupData.isOpen}
+        onClose={closeAllPopups}
+        children={popupData.children}
+        nameSubBtn={popupData.nameSubBtn}
+      />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
+
       <Footer />
     </div>
   );

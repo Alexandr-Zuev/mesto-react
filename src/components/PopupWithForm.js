@@ -9,7 +9,7 @@ function PopupWithForm({ title, name, isOpen, onClose, children, nameSubBtn }) {
           <h2 className="popup__title">{title}</h2>
           {children}
           <button type="submit" className="popup__button">
-             {nameSubBtn}
+            {nameSubBtn}
           </button>
         </form>
       </div>
