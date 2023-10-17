@@ -3,97 +3,31 @@ import { api } from '../utils/api.js';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import EditProfilePopup from './EditProfilePopup';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
 function App() {
-  const [popupData, setPopupData] = useState({
+  const [popup, setPopupData] = useState({
     isOpen: false,
-    title: '',
-    name: '',
-    nameSubBtn: '',
     children: ''
   });
 
-  const onEditProfile = () => {
+  const isEditProfilePopupOpen = () => {
     setPopupData({
-      isOpen: true,
-      title: 'Редактировать профиль',
-      name: 'edit-form',
-      nameSubBtn: 'Сохранить',
-      children: (
-        <>
-          <input
-            id="name-input-title"
-            type="text"
-            className="popup__input"
-            name="name-input-title"
-            required
-          />
-          <span id="name-input-title-error" className="popup__error"></span>
-          <input
-            id="name-input-subtitle"
-            type="text"
-            className="popup__input"
-            name="name-input-subtitle"
-            required
-          />
-          <span id="name-input-subtitle-error" className="popup__error"></span>
-        </>
-      )
+      isOpen: true
     });
   };
 
   const onAddPlace = () => {
     setPopupData({
-      isOpen: true,
-      title: 'Новое место',
-      name: 'add-form',
-      nameSubBtn: 'Создать',
-      children: (
-        <>
-          <input
-            id="name-input-card"
-            type="text"
-            className="popup__input"
-            name="name-input-card"
-            placeholder="Название"
-            required
-          />
-          <span id="name-input-card-error" className="popup__error"></span>
-          <input
-            id="name-input-link"
-            type="url"
-            className="popup__input"
-            name="name-input-link"
-            placeholder="Ссылка на картинку"
-            required
-          />
-          <span id="name-input-link-error" className="popup__error"></span>
-        </>
-      )
+      isOpen: true
     });
   };
 
   const onEditAvatar = () => {
     setPopupData({
-      isOpen: true,
-      title: 'Обновить аватар',
-      name: 'new-avatar-form',
-      nameSubBtn: 'Сохранить',
-      children: (
-        <>
-          <input
-            id="new-avatar-link"
-            type="url"
-            className="popup__input"
-            name="new-avatar-link"
-            placeholder="Ссылка на аватар"
-            required
-          />
-          <span id="new-avatar-link-error" className="popup__error"></span>
-        </>
-      )
+      isOpen: true
     });
   };
 
@@ -116,11 +50,11 @@ function App() {
 
   const mapCards = cards => {
     return cards.map(item => ({
-      id: item._id,
-      src: item.link,
-      alt: item.name,
-      title: item.owner.name,
-      subtitle: item.owner.about
+      likes: item.likes,
+      _id: item._id,
+      name: item.name,
+      link: item.link,
+      owner: item.owner
     }));
   };
 
@@ -137,30 +71,59 @@ function App() {
       });
   }, []);
 
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    api
+      .getUserInfo()
+      .then(userInfo => {
+        setCurrentUser(userInfo);
+      })
+      .catch(error => {
+        console.error('Ошибка при получении информации о пользователе:', error);
+      });
+  }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    api.changeLikeCardStatus(card._id, !isLiked).then(newCard => {
+      setCards(state => state.map(c => (c._id === card._id ? newCard : c)));
+    });
+  }
+
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards(currentCards => currentCards.filter(c => c._id !== card._id));
+      })
+      .catch(error => {
+        console.error('Ошибка при удалении карточки:', error);
+      });
+  }
+
   return (
-    <div className="page">
-      <Header />
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <Header />
+        <Main
+          userName={currentUser.name}
+          userDescription={currentUser.about}
+          userAvatar={currentUser.avatar}
+          handleEditProfileClick={isEditProfilePopupOpen}
+          handleAddPlaceClick={onAddPlace}
+          handleEditAvatarClick={onEditAvatar}
+          cards={cards}
+          handleCardClick={handleCardClick}
+          handleLikeClick={handleCardLike}
+          handleDeleteClick={handleCardDelete}
+        />
+        <EditProfilePopup isOpen={popup.isOpen} onClose={closeAllPopups} />
 
-      <Main
-        handleEditProfileClick={onEditProfile}
-        handleAddPlaceClick={onAddPlace}
-        handleEditAvatarClick={onEditAvatar}
-        cards={cards}
-        handleCardClick={handleCardClick}
-      />
-
-      <PopupWithForm
-        title={popupData.title}
-        name={popupData.name}
-        isOpen={popupData.isOpen}
-        onClose={closeAllPopups}
-        children={popupData.children}
-        nameSubBtn={popupData.nameSubBtn}
-      />
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
-
-      <Footer />
-    </div>
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
+        <Footer />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

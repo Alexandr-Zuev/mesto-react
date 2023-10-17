@@ -1,38 +1,20 @@
-import React, { useState, useEffect } from 'react';
 import updateAva from '../images/updateava.svg';
-import { api } from '../utils/api.js';
 import Card from './Card';
 
 function Main({
+  userName,
+  userDescription,
+  userAvatar,
   handleEditAvatarClick,
   handleEditProfileClick,
   handleAddPlaceClick,
   cards,
-  handleCardClick
+  handleCardClick,
+  handleLikeClick,
+  handleDeleteClick
 }) {
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-
-  useEffect(() => {
-    const handleRequest = function () {
-      api
-        .getUserInfo()
-        .then(userData => {
-          setUserName(userData.name);
-          setUserDescription(userData.about);
-          setUserAvatar(userData.avatar);
-        })
-        .catch(error => {
-          console.error('Ошибка при получении данных о пользователе:', error);
-        });
-    };
-
-    handleRequest();
-  }, []);
-
   return (
-    <main class="content">
+    <main className="content">
       <div className="profile">
         <div className="profile__avatar-group">
           <img src={userAvatar} alt="аватар" className="profile__avatar" />
@@ -64,7 +46,7 @@ function Main({
       </div>
       <section className="elements">
         {cards.map(card => (
-          <Card card={card} onCardClick={handleCardClick} key={card.id} />
+          <Card card={card} key={card._id} onCardClick={handleCardClick} onCardLike ={handleLikeClick} onCardDelete ={handleDeleteClick}/>
         ))}
       </section>
     </main>

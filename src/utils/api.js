@@ -58,24 +58,6 @@ class Api {
     }).then(this._getResponseData);
   }
 
-  likeCard(cardId) {
-    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
-      headers: {
-        authorization: this.headers.authorization
-      }
-    }).then(this._getResponseData);
-  }
-
-  unlikeCard(cardId) {
-    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
-      headers: {
-        authorization: this.headers.authorization
-      }
-    }).then(this._getResponseData);
-  }
-
   updateAvatar(avatarUrl) {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: 'PATCH',
@@ -84,6 +66,17 @@ class Api {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ avatar: avatarUrl })
+    }).then(this._getResponseData);
+  }
+
+  changeLikeCardStatus(cardId, isLiked) {
+    const method = isLiked ? 'PUT' : 'DELETE';
+
+    return fetch(`${this.baseUrl}/cards/likes/${cardId}`, {
+      method: method,
+      headers: {
+        authorization: this.headers.authorization
+      }
     }).then(this._getResponseData);
   }
 }
