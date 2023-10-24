@@ -23,13 +23,13 @@ export default function Card({ card, onCardClick, onCardLike, onCardDelete, curr
         className="element__img"
         onClick={() => handleClick(card)}
       />
-      {isOwn && (
+      {isOwn ? (
         <button
           className="delete-button"
           type="button"
           onClick={() => handleDeleteClick(card)}
         ></button>
-      )}
+      ) : null}
       <div className="element__group">
         <h2 className="element__text">{card.name}</h2>
         <div className="element__like">
