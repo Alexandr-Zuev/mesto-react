@@ -1,10 +1,7 @@
 import React from 'react';
 
-
-function PopupWithForm({ title, name, isOpen, onClose, children, onSubmit}) {
-
-
-  const handleSubmit = (e) => {
+function PopupWithForm({ title, name, isOpen, onClose, children, onSubmit, nameSubBtn }) {
+  const handleSubmit = e => {
     e.preventDefault();
     onSubmit(e);
   };
@@ -15,8 +12,11 @@ function PopupWithForm({ title, name, isOpen, onClose, children, onSubmit}) {
         <button className="popup__close-button" type="button" onClick={onClose}></button>
         <form id={name} className="popup__form" name={name} onSubmit={handleSubmit}>
           <h2 className="popup__title">{title}</h2>
-          {children} 
-            </form>
+          {children}
+          <button type="submit" className="popup__button">
+            {nameSubBtn}
+          </button>
+        </form>
       </div>
     </div>
   );

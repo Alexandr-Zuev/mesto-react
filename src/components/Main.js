@@ -2,9 +2,7 @@ import updateAva from '../images/updateava.svg';
 import Card from './Card';
 
 function Main({
-  userName,
-  userDescription,
-  userAvatar,
+  currentUser,
   handleEditAvatarClick,
   handleEditProfileClick,
   handleAddPlaceClick,
@@ -17,7 +15,7 @@ function Main({
     <main className="content">
       <div className="profile">
         <div className="profile__avatar-group">
-          <img src={userAvatar} alt="аватар" className="profile__avatar" />
+          <img src={currentUser.avatar} alt="аватар" className="profile__avatar" />
           <img
             src={updateAva}
             alt="Редактирование аватара"
@@ -27,7 +25,7 @@ function Main({
         </div>
         <div className="profile__info">
           <div className="profile__info-title">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser.name}</h1>
             <button
               id="open-popup-profile-button"
               className="open-button"
@@ -35,7 +33,7 @@ function Main({
               onClick={handleEditProfileClick}
             ></button>
           </div>
-          <p className="profile__subtitle">{userDescription}</p>
+          <p className="profile__subtitle">{currentUser.about}</p>
         </div>
         <button
           id="add-button"
@@ -46,7 +44,14 @@ function Main({
       </div>
       <section className="elements">
         {cards.map(card => (
-          <Card card={card} key={card._id} onCardClick={handleCardClick} onCardLike ={handleLikeClick} onCardDelete ={handleDeleteClick}/>
+          <Card
+            card={card}
+            key={card._id}
+            onCardClick={handleCardClick}
+            onCardLike={handleLikeClick}
+            onCardDelete={handleDeleteClick}
+            currentUser={currentUser}
+          />
         ))}
       </section>
     </main>

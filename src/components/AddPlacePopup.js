@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
@@ -7,21 +7,26 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     link: ''
   });
 
-  const nameRef = useRef();
-  const linkRef = useRef();
-
-  const handleNameChange = e => {
-    setNewCardData({ ...newCardData, name: e.target.value });
-  };
-
-  const handleLinkChange = e => {
-    setNewCardData({ ...newCardData, link: e.target.value });
+  const handleChange = e => {
+    setNewCardData({
+      ...newCardData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     onAddPlace(newCardData);
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setNewCardData({
+        name: '',
+        link: ''
+      });
+    }
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -30,34 +35,30 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      nameSubBtn="Создать"
     >
       <input
         type="text"
         id="name-input-card"
         className="popup__input"
-        name="name-input-card"
+        name="name"
         placeholder="Название"
         required
         value={newCardData.name}
-        onChange={handleNameChange}
-        ref={nameRef}
+        onChange={handleChange}
       />
       <span id="name-input-card-error" className="popup__error"></span>
       <input
         type="url"
         id="name-input-link"
         className="popup__input"
-        name="name-input-link"
+        name="link"
         placeholder="Ссылка на картинку"
         required
         value={newCardData.link}
-        onChange={handleLinkChange}
-        ref={linkRef}
+        onChange={handleChange}
       />
       <span id="name-input-link-error" className="popup__error"></span>
-      <button type="submit" className="popup__button">
-        Создать
-      </button>
     </PopupWithForm>
   );
 }

@@ -2,48 +2,47 @@ import React, { useState, useContext, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
-function EditProfilePopup( {isOpen, onClose, onUpdateUser} ) {
+function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const currentUser = useContext(CurrentUserContext);
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser]);
+  }, [isOpen, currentUser]);
 
-  const handleNameChange = (e) => {
+  const handleNameChange = e => {
     setName(e.target.value);
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = e => {
     setDescription(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); 
+  const handleSubmit = e => {
+    e.preventDefault();
     onUpdateUser({
       name,
-      about: description,
+      about: description
     });
   };
 
   return (
-   
     <PopupWithForm
       title="Редактировать профиль"
       name="edit-form"
-      isOpen={isOpen} 
+      isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      nameSubBtn="Сохранить"
     >
       <input
         id="name-input-title"
         type="text"
         className="popup__input"
         name="name-input-title"
-        value={name}
+        value={name || ''}
         onChange={handleNameChange}
         required
       />
@@ -53,14 +52,11 @@ function EditProfilePopup( {isOpen, onClose, onUpdateUser} ) {
         type="text"
         className="popup__input"
         name="name-input-subtitle"
-        value={description}
+        value={description || ''}
         onChange={handleDescriptionChange}
         required
       />
       <span id="name-input-subtitle-error" className="popup__error"></span>
-      <button type="submit" className="popup__button">
-        Сохранить
-      </button>
     </PopupWithForm>
   );
 }

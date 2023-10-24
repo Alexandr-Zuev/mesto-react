@@ -5,15 +5,15 @@ import Main from './Main';
 import Footer from './Footer';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
-import EditAvatarPopup from './EditAvatarPopup'; 
-import AddPlacePopup from './AddPlacePopup'; 
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  
+
   const onEditProfile = () => {
     setIsEditProfilePopupOpen(true);
   };
@@ -28,7 +28,7 @@ function App() {
 
   const [selectedCard, setSelectedCard] = useState(null);
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
-  const handleCardClick = (card) => {
+  const handleCardClick = card => {
     setSelectedCard(card);
     setImagePopupOpen(true);
   };
@@ -40,25 +40,15 @@ function App() {
     setSelectedCard(null);
   };
 
-  const mapCards = (cards) => {
-    return cards.map((item) => ({
-      likes: item.likes,
-      _id: item._id,
-      name: item.name,
-      link: item.link,
-      owner: item.owner,
-    }));
-  };
-
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api
       .getInitialCards()
-      .then((res) => {
-        setCards(mapCards(res));
+      .then(getCards => {
+        setCards(getCards);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при загрузке данных:', error);
       });
   }, []);
@@ -68,64 +58,69 @@ function App() {
   useEffect(() => {
     api
       .getUserInfo()
-      .then((userInfo) => {
+      .then(userInfo => {
         setCurrentUser(userInfo);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при получении информации о пользователе:', error);
       });
   }, []);
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then(newCard => {
+        setCards(state => state.map(c => (c._id === card._id ? newCard : c)));
+      })
+      .catch(error => {
+        console.error('Произошла ошибка при обновлении состояния карточек:', error);
+      });
   }
 
   function handleCardDelete(card) {
     api
       .deleteCard(card._id)
       .then(() => {
-        setCards((currentCards) => currentCards.filter((c) => c._id !== card._id));
+        setCards(currentCards => currentCards.filter(c => c._id !== card._id));
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при удалении карточки:', error);
       });
   }
-  
-  const handleUpdateUser = (userInfo) => {
+
+  const handleUpdateUser = userInfo => {
     api
       .editProfile(userInfo)
-      .then((updatedUser) => {
+      .then(updatedUser => {
         setCurrentUser(updatedUser);
-        closeAllPopups(); 
+        closeAllPopups();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при обновлении профиля:', error);
       });
   };
 
-  const handleUpdateAvatar = (data) => {
+  const handleUpdateAvatar = data => {
     api
       .updateAvatar(data.avatar)
-      .then((updatedUser) => {
-        setCurrentUser(updatedUser); 
+      .then(updatedUser => {
+        setCurrentUser(updatedUser);
         closeAllPopups();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при обновлении аватара:', error);
       });
   };
 
-  const handleAddPlaceSubmit = (newCardData) => {
+  const handleAddPlaceSubmit = newCardData => {
     api
-      .addNewCard(newCardData)  
-      .then((newCard) => {
-        setCards([newCard, ...cards]); 
+      .addNewCard(newCardData)
+      .then(newCard => {
+        setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Ошибка при добавлении новой карточки:', error);
       });
   };
@@ -135,20 +130,30 @@ function App() {
       <div className="page">
         <Header />
         <Main
-          userName={currentUser.name}
-          userDescription={currentUser.about}
-          userAvatar={currentUser.avatar}
+          currentUser={currentUser}
           handleEditProfileClick={onEditProfile}
-          handleAddPlaceClick={onAddPlace} 
+          handleAddPlaceClick={onAddPlace}
           handleEditAvatarClick={onEditAvatar}
           cards={cards}
           handleCardClick={handleCardClick}
           handleLikeClick={handleCardLike}
           handleDeleteClick={handleCardDelete}
         />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} /> 
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} /> 
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
         <ImagePopup isOpen={isImagePopupOpen} card={selectedCard} onClose={closeAllPopups} />
         <Footer />
       </div>
