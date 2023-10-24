@@ -13,6 +13,9 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [isImagePopupOpen, setImagePopupOpen] = useState(false);
 
   const onEditProfile = () => {
     setIsEditProfilePopupOpen(true);
@@ -26,8 +29,6 @@ function App() {
     setIsAddPlacePopupOpen(true);
   };
 
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const handleCardClick = card => {
     setSelectedCard(card);
     setImagePopupOpen(true);
@@ -39,8 +40,6 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
   };
-
-  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     api
