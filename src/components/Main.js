@@ -1,8 +1,9 @@
+import React, { useContext } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
 import updateAva from '../images/updateava.svg';
 import Card from './Card';
 
 function Main({
-  currentUser,
   handleEditAvatarClick,
   handleEditProfileClick,
   handleAddPlaceClick,
@@ -11,6 +12,8 @@ function Main({
   handleLikeClick,
   handleDeleteClick
 }) {
+  const currentUser = useContext(CurrentUserContext);
+
   return (
     <main className="content">
       <div className="profile">
@@ -50,7 +53,6 @@ function Main({
             onCardClick={handleCardClick}
             onCardLike={handleLikeClick}
             onCardDelete={handleDeleteClick}
-            currentUser={currentUser}
           />
         ))}
       </section>

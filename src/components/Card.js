@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
-export default function Card({ card, onCardClick, onCardLike, onCardDelete, currentUser }) {
+export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
+  const currentUser = useContext(CurrentUserContext);
   const handleClick = card => {
     onCardClick(card);
   };

@@ -44,8 +44,8 @@ function App() {
   useEffect(() => {
     api
       .getInitialCards()
-      .then(getCards => {
-        setCards(getCards);
+      .then(cards => {
+        setCards(cards);
       })
       .catch(error => {
         console.error('Ошибка при загрузке данных:', error);
@@ -129,7 +129,6 @@ function App() {
       <div className="page">
         <Header />
         <Main
-          currentUser={currentUser}
           handleEditProfileClick={onEditProfile}
           handleAddPlaceClick={onAddPlace}
           handleEditAvatarClick={onEditAvatar}
